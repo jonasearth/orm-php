@@ -51,7 +51,7 @@
 				$query = "SELECT ".$coluna." FROM " . $tabela;
 			}else{
 				$query = "SELECT ".$coluna." FROM ".$tabela." ". $condicao;
-			}	
+            }	
 			$run = mysqli_query($this->conn, $query);
 			if($this->conn->errno != 0){
 				$this->error = $this->conn->error;
