@@ -1,0 +1,6 @@
+{
+  "php.validate.enable": true,
+  "php.validate.executablePath": "C:/xampp/php/php.exe",
+  "prettier.packageManager": "yarn",
+
+}
