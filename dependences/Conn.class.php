@@ -20,7 +20,7 @@
                 
 				if (!$conn) {
 
-                    $this->error = "Connection failed: " . mysqli_connect_error();
+                    $this->error = $this->conn->error;
 
                     return false;
 
