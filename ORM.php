@@ -10,7 +10,7 @@
         /* INICIO VARIAVEIS */
             /* INICIO DAS VARIAVEIS PRIVADAS */
 
-                private $conn;
+                public $conn;
 
             /* FIM DAS VARIAVEIS PRIVADAS */
 
@@ -36,11 +36,14 @@
                     public function create($model){
                     
                         $conn = new Conn($model->host, $model->user, $model->password, $model->database);
-                        if(!$conn){
-                            return (object)[
+                        
+                        if(!$conn || !$conn->conn){
+                            $this->conn = $conn;
+                            die(json_encode( (object) [
+                                
                                 "status" => false,
-                                "error" => $conn->error,
-                            ];
+                                "error" => utf8_encode($conn->error),
+                            ]));
                         }else{
                             $this->conn = $conn;
                             return (object) [
@@ -58,40 +61,22 @@
                         $class = $this->getClassName($model);
                         
                         if (!$class) 
-                            return (object) [
-                                "status" => false,
-                                "error" => "Class Name not found",
-                                "data" => []
-                            ];
+                            return $this->returnError("Class Name not found!");
                             
                         $condition = $this->buildConditionLike($model);
                         
                         $res = $this->conn->select("*", strtolower($class."s"), $condition);
-                    
+                        
                         if(!$res && $this->conn->error != null){
-                            return (object) [
-                                "status" => false,
-                                "error" => $this->conn->error,
-                                "data" => [],
-                            ];
+                            return $this->returnError($this->conn->error);
                         }else{
                             if(!isset($res[0])){
-                                return (object) [
-                                    "status" => false,
-                                    "error" => false,
-                                    "data" => [
-                                    "msg"=> "Nenhum resultado encontrado!",
-                                    ],
-                                ];
+                                return $this->returnError("Nenhum resultado encontrado!");
                             }else{
 
                                 $res = $this->fetchResults($res, $class);
                                 
-                                return (object) [
-                                    "status" => true,
-                                    "error" => null,
-                                    "data" => $res,
-                                ]; 
+                                return $this->returnSucess($res); 
                             }
                         } 
                     }
@@ -100,38 +85,20 @@
                         
                         $class = $this->getClassName($model);
                         if (!$class) 
-                            return (object) [
-                                "status" => false,
-                                "error" => "Class Name not found",
-                                "data" => []
-                            ];
+                            return $this->returnError("Class Name not found!");
                         
                         $res = $this->conn->select("*", strtolower($class."s"));
-
+                        
                         if(!$res && $this->conn->error != null){
-                            return (object) [
-                                "status" => false,
-                                "error" => $this->conn->error,
-                                "data" => [],
-                            ];
+                            return $this->returnError($this->conn->error);
                         }else{
                             if(!isset($res[0])){
-                                return (object) [
-                                    "status" => false,
-                                    "error" => false,
-                                    "data" => [
-                                    "msg"=> "Nenhum resultado encontrado!",
-                                    ],
-                                ];
+                                return $this->returnError("Nenhum resultado encontrado!");
                             }else{
                                 
-                                $res = $this->fetchResults($res);
+                                $res = $this->fetchResults($res, $class);
 
-                                return (object) [
-                                    "status" => true,
-                                    "error" => null,
-                                    "data" => $res,
-                                ];
+                                return $this->returnSucess($res);
                                 
                             }
                         }
@@ -142,40 +109,23 @@
                         $class = $this->getClassName($model);
                         
                         if (!$class) 
-                            return (object) [
-                                "status" => false,
-                                "error" => "Class Name not found",
-                                "data" => []
-                            ];
+                            return $this->returnError("Class Name not found!");
                         
                         $condition = $this->buildConditionEqual($model);
                         
                         $res = $this->conn->select("*", strtolower($class."s"), $condition);
 
                         if(!$res && $this->conn->error != null){
-                            return (object) [
-                                "status" => false,
-                                "error" => $this->conn->error,
-                                "data" => [],
-                            ];
+                            return $this->returnError($this->conn->error);
+                               
                         }else{
                             if(!isset($res[0])){
-                                return (object) [
-                                    "status" => false,
-                                    "error" => false,
-                                    "data" => [
-                                    "msg"=> "Nenhum resultado encontrado!",
-                                    ],
-                                ];
+                                return $this->returnError("Nenhum resultado encontrado!");
                             }else{
 
                                 $res = $this->fetchResults($res, $class);
                                 
-                                return (object) [
-                                    "status" => true,
-                                    "error" => null,
-                                    "data" => $res,
-                                ]; 
+                                return $this->returnSucess($res); 
                             }
                         }
                     }
@@ -186,46 +136,24 @@
                         $class = $this->getClassName($model);
 
                         if (!$class) 
-                        return (object) [
-                            "status" => false,
-                            "error" => "Class Name not found",
-                            "data" => []
-                        ];
+                        return $this->returnError("Class Name not found!");
                     
                         $condition = $this->buildConditionAny($model);
                         if (isset($condition->error)) {
-                            return (object) [
-                                "status" => false,
-                                "error" => $condition->error,
-                                "data" => []
-                            ];
+                            return $this->returnError($condition->error);
                         }
                         $res = $this->conn->select("*", strtolower($class."s"), $condition);
                         
                         if(!$res && $this->conn->error != null){
-                            return (object) [
-                                "status" => false,
-                                "error" => $this->conn->error,
-                                "data" => [],
-                            ];
+                            return $this->returnError($this->conn->error);
                         }else{
                             if(!isset($res[0])){
-                                return (object) [
-                                    "status" => false,
-                                    "error" => false,
-                                    "data" => [
-                                    "msg"=> "Nenhum resultado encontrado!",
-                                    ],
-                                ];
+                                return $this->returnError("Nenhum resultado encontrado!");
                             }else{
 
                                 $res = $this->fetchResults($res, $class);
                                 
-                                return (object) [
-                                    "status" => true,
-                                    "error" => null,
-                                    "data" => $res,
-                                ]; 
+                                return $this->returnSucess($res);
                             }
                         }
                     }
@@ -238,6 +166,21 @@
             /* INICIO DOS METODOS PRIVADOS */
                 
                 /* INICIO DAS FERRAMENTAS MUITO UTILIZADAS */
+                    private function returnError($error){
+                        return (object) [
+                            "status" => false,
+                            "error" => $error,
+                            "data" => [],
+                        ];
+                    }
+
+                    private function returnSucess($data){
+                        return (object) [
+                            "status" => true,
+                            "error" => null,
+                            "data" => $data,
+                        ]; 
+                    }
                     private function fetchResults($res, $class){
                         $i = 0;
                         while(isset($res[$i])){
@@ -323,7 +266,7 @@
                                     }
                                 }elseif($key == "NOT LIKE"){
                                     foreach($value as $key => $values){
-                                        $condition .= $key. " NOT LIKE '". $values."' ";
+                                        $condition .= $key. " NOT LIKE '%". $values."%' ";
                                     }
                                 }elseif($key == "BETWEEN"){
                                     foreach($value as $key => $values){

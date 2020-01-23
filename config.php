@@ -18,10 +18,9 @@
         "password" => "",
         "database" => "orm",
     ];
-
-  
     $a = new ORM() ;
-    $a->create($mod);
+    $b = $a->create($mod);
+
     $GLOBALS["ORM"] = $a;
 
 /*

@@ -16,11 +16,12 @@
 		function __construct($host, $user, $pass, $db){
 			$this->loadAux();
 			
-                $conn = mysqli_connect($host, $user, $pass, $db);
-                
-				if (!$conn) {
+				$conn = mysqli_connect($host, $user, $pass, $db);
+				
+				
+				if (!$conn || mysqli_connect_error() != null) {
 
-                    $this->error = $this->conn->error;
+                    $this->error = mysqli_connect_error();
 
                     return false;
 
