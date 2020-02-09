@@ -84,6 +84,7 @@ class Conn
             ") VALUES (" .
             $val .
             ")";
+
         if ($this->conn->errno != 0) {
             $this->error = $this->conn->error;
             return false;

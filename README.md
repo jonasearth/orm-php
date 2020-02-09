@@ -207,4 +207,120 @@ O metodo create() retorna um conteudo em json com um status e um error :
                 }
             ```
 
-    2.
+    2. INSERÇÃO
+        1. metodos utilizados para inserir conteudo. ex:
+            1. metodo insertOne
+                1. Usando modelo:
+                    ```php
+                    //abertura do objeto modelo
+                    $User = new User();
+                    $User->nome = "teste";
+                    $User->senha = "senhateste";
+                    //passagem do modelo para o metodo
+                    $retorno = $ORM->insertOne($User);
+                    //o metodo pegara o nome da classe para busca da tabela e usara o modelo para retorno do objeto
+                    ```
+                    - Caso tenha sucesso o retorno será:
+                    ```json
+                    {
+                        "status": true,
+                        "error": null,
+                        "data": {
+                            "msg": "Inserido com Sucesso"
+                        }
+                    }
+                    ```
+                2. Sem modelo:
+                    ```php
+
+                    $User = (object) [
+                        "class_name" => "User",
+                        "nome" => "teste",
+                        "senha" => "senhateste"
+                    ];
+
+                    $retorno = $ORM->getAll($User);
+
+                    ```
+
+            2. Metodo insertN()
+                - Funciona da mesma maneira porem você irá passar um array com varios objetos para a inserção
+
+                ```php
+
+                    $User = new User();
+                    $User->nome = "teste";
+                    $User->senha = "senhateste";
+                    $User2 = new User();
+                    $User2->nome = "teste2";
+                    $User2->senha = "senhateste2";
+                    $users = [
+                        $User,
+                        $User2
+                    ];
+
+                    $retorno = $ORM->insertN($users);
+
+                ```
+                - O retorno vira em forma de array correspondente a ordem passada onde cada um dos objetos enviados terá sua propria resposta
+    3. UPDATE
+        - metodo updateOne()
+            ###### esse metodo não tem suporte a modelos
+            -passagem dos parametros class_name,  identifier para saber qual linha da tabela deve se editar e sets para saber o que deve mudar e para qual valor
+
+            ```php
+
+                    $User = (object) [
+                        "class_name" => "User",
+                        "identifier" => (object)[
+                            "id" => 15,
+                        ],
+                        "sets" => (object)[
+                            "nome" => "testeatt",
+                            "senha" => "senhatesteatt"
+                        ]
+
+                    ];
+
+                    $retorno = $ORM->updateOne($User);
+
+            ```
+            - O retorno caso sucesso será:
+                ```json
+                    {
+                        "status": true,
+                        "error": null,
+                        "data": {
+                            "msg": "Atualizado com Sucesso"
+                        }
+                    }
+                ```
+
+    4. DELETE
+        - metodo deleteOne()
+            ###### esse metodo não tem suporte a modelos
+            -passagem dos parametros class_name,  identifier para saber qual linha da tabela deve se deletar
+
+            ```php
+
+                    $User = (object) [
+                        "class_name" => "User",
+                        "identifier" => (object)[
+                            "id" => 15,
+                        ],
+
+                    ];
+
+                    $retorno = $ORM->deleteOne($User);
+
+            ```
+            - O retorno caso sucesso será:
+                ```json
+                    {
+                        "status": true,
+                        "error": null,
+                        "data": {
+                            "msg": "Deletado com Sucesso"
+                        }
+                    }
+                ```

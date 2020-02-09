@@ -4,21 +4,13 @@ require_once 'User.php';
 
 $User = (object) [
     "class_name" => "User",
-    //ira buscar todos os resultados que contem "a" no nome
-    "LIKE" => (object) [
-        "nome" => "a"
-    ],
-    //e que a senha não seja igual a "amarsempre"
-    "NOT EQUAL" => (object) [
-        "senha" => "amarsempre"
-    ],
-    //properties definem algumas propriedades para a busca como limite de dados e tipo de ordem
-    "properties" => (object) [
-        "LIMIT" => 2,
-        "ORDER" => "BY ID DESC"
+    "identifier" => (object) [
+        "id" => 14
     ]
 ];
 
-echo $GLOBALS["ORM"]->getAny($User);
+//passagem do modelo para o metodo
+
+echo $GLOBALS["ORM"]->deleteOne($User);
 
 // echo json_encode($users);
