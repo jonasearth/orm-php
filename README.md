@@ -34,7 +34,9 @@ O metodo create() retorna um conteudo em json com um status e um error :
 
 ```json
 {
-    "status": true, //true quando a conexao foi feita, false caso haja algum problema
-    "error": null //null quando não há erros, e quando há retorna uma string com o erro
+    //true quando a conexao foi feita, false caso haja algum problema
+    "status": true,
+    //null quando não há erros, e quando há retorna uma string com o erro
+    "error": null
 }
 ```
