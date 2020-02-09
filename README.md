@@ -29,3 +29,12 @@ $ORM = new ORM();
 //passagem dos parâmetros para criação da conexão
 $ORM->create($conn);
 ```
+
+O metodo create() retorna um conteudo em json com um status e um error :
+
+```json
+{
+    "status": true, //true quando a conexao foi feita, false caso haja algum problema
+    "error": null //null quando não há erros, e quando há retorna uma string com o erro
+}
+```
