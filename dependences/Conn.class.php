@@ -127,7 +127,7 @@ class Conn
     function delete($tabela, $condicao)
     {
         $query = "DELETE FROM `" . $tabela . "` " . $condicao;
-        die($query);
+
         if (mysqli_query($this->conn, $query)) {
             if (mysqli_affected_rows($this->conn) == 0) {
                 $this->error =

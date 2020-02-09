@@ -55,10 +55,12 @@ class ORM
             );
         } else {
             $this->conn = $conn;
-            return (object) [
-                "status" => true,
-                "error" => null
-            ];
+            return json_encode(
+                (object) [
+                    "status" => true,
+                    "error" => null
+                ]
+            );
         }
     }
     /* FIM DO METODO DE LIGAÇÃO */
