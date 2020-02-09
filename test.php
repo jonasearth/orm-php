@@ -1,14 +1,14 @@
 <?php
-        require_once('config.php');
-        require_once 'User.php';
-        
-        $user = new User();
+require_once 'config.php';
+require_once 'User.php';
 
-        $users = $GLOBALS["ORM"]->getSome((object) [
-            "class_name" => "User", 
-            "id" => "' or id = '2"
-        ]);
-        echo json_encode($users);
+$obj = (object) [
+    "class_name" => "user",
+    "identifier" => (object) [
+        "id" => 1
+    ]
+];
 
+echo json_encode($GLOBALS["ORM"]->deleteOne($obj));
 
-
+// echo json_encode($users);
