@@ -87,6 +87,124 @@ O metodo create() retorna um conteudo em json com um status e um error :
 
     1. SELEÇÂO
 
-    -
+        - Metodos de seleção se baseiam em obter algum dado do banco
 
-    Metodos de seleção se baseiam em obter algum dado do banco
+        1. metodo getAll retorna todos os resultados da tabela sem a necessidade de envio de parametros:
+
+            1. Com Modelo:
+
+            ```php
+            //abertura do objeto modelo
+            $User = new User();
+            //passagem do modelo para o metodo
+            $retorno = $ORM->getAll($User);
+            //o metodo pegara o nome da classe para busca da tabela e usara o modelo para retorno do objeto
+            ```
+
+            - Dentro de \$retorno terá um json com status, error, e data que terá um array com resultados da busca:
+
+            ```json
+            {
+                "status": true,
+                "error": null,
+                "data": [
+                    {
+                        "id": "2",
+                        "nome": "david",
+                        "senha": "viado"
+                    },
+                    {
+                        "id": "5",
+                        "nome": "jonas",
+                        "senha": "amarsempre"
+                    },
+                    {
+                        "id": "6",
+                        "nome": "bacelar",
+                        "senha": "banana123"
+                    },
+                    {
+                        "id": "7",
+                        "nome": "joao",
+                        "senha": "35cmeu"
+                    }
+                ]
+            }
+            ```
+
+            2. Sem modelo:
+                ```php
+                //abertura do objeto neutro com passagem obrigatoria do class_name
+                $User = (object) [
+                    "class_name" => "User"
+                ];
+                //passagem do modelo para o metodo
+                $retorno = $ORM->getAll($User);
+                //o metodo pegara o nome da classe para busca da tabela e usara o modelo para retorno do objeto
+                ```
+
+            - O retorno será identico ao metodo anterior.
+
+        2. metodo getAny retorna os resultados da tabela baseado no envio dos parametros:
+           \*Esse metodo suporta os seguintes parametros
+           -EQUAL
+           -NOT EQUAL
+           -LIKE
+           -NOT LIKE
+           -BETWEEN
+           -NOT BETWEEN
+           -properties
+
+            ###### Modelo de uso
+
+
+            ```php
+            //abertura do objeto neutro com passagem obrigatoria do class_name
+            $User = (object) [
+                "class_name" => "User",
+                //ira buscar todos os resultados que contem "a" no nome
+                "LIKE" => (object) [
+                    "nome" => "a"
+                ],
+                //e que a senha não seja igual a "amarsempre"
+                "NOT EQUAL" => (object) [
+                    "senha" => "amarsempre"
+                ],
+                //properties definem algumas propriedades para a busca como limite de dados e tipo de ordem
+                "properties" => (object) [
+                    "LIMIT" => 2,
+                    "ORDER" => "BY ID DESC"
+                ]
+            ];
+            //passagem do modelo para o metodo
+            $retorno = $ORM->getAny($User);
+            //o metodo pegara o nome da classe para busca da tabela e usara o modelo para retorno do objeto
+            ```
+
+            - Dentro de \$retorno terá:
+
+            ```json
+            {
+                "status": true,
+                "error": null,
+                "data": [
+                    {
+                    "id": "2",
+                    "nome": "david",
+                    "senha": "viado"
+                    },
+                    {
+                    "id": "6",
+                    "nome": "bacelar",
+                    "senha": "banana123"
+                    },
+                    {
+                    "id": "7",
+                    "nome": "joao",
+                    "senha": "35cmeu"
+                    }
+                ]
+                }
+            ```
+
+    2.

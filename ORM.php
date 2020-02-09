@@ -91,33 +91,6 @@ class ORM
         }
     }
 
-    public function getSome($model)
-    {
-        $class = $this->getClassName($model);
-
-        if (!$class) {
-            return $this->returnError("Class Name not found!");
-        }
-
-        $condition = $this->buildConditionEqual($model);
-
-        $res = $this->conn->select("*", strtolower($class . "s"), $condition);
-
-        if (!$res && $this->conn->error != null) {
-            $er = $this->conn->error;
-            $this->conn->error = null;
-            return $this->returnError($er);
-        } else {
-            if (!isset($res[0])) {
-                return $this->returnError("Nenhum resultado encontrado!");
-            } else {
-                $res = $this->fetchResults($res, $class);
-
-                return $this->returnSucess($res);
-            }
-        }
-    }
-
     /* Esse metodo suporta  =, !=,  LIKE, NOT LIKE, BETWEEN, NOT BETWEEN*/
     public function getAny($model)
     {
@@ -298,20 +271,24 @@ class ORM
     /* INICIO DAS FERRAMENTAS MUITO UTILIZADAS */
     private function returnError($error)
     {
-        return (object) [
-            "status" => false,
-            "error" => $error,
-            "data" => []
-        ];
+        return json_encode(
+            (object) [
+                "status" => false,
+                "error" => $error,
+                "data" => []
+            ]
+        );
     }
 
     private function returnSucess($data)
     {
-        return (object) [
-            "status" => true,
-            "error" => null,
-            "data" => $data
-        ];
+        return json_encode(
+            (object) [
+                "status" => true,
+                "error" => null,
+                "data" => $data
+            ]
+        );
     }
 
     private function fetchResults($res, $class)
@@ -357,7 +334,7 @@ class ORM
         $condition = "";
         $i = 0;
         foreach ($model as $key => $value) {
-            if ($key != "propriedades" && !empty($value)) {
+            if ($key != "properties" && !empty($value)) {
                 if ($i != 0) {
                     $condition .= " AND ";
                 } else {
@@ -438,39 +415,6 @@ class ORM
                     ];
                 }
 
-                $i++;
-            }
-        }
-        if (isset($model->propriedades)) {
-            foreach ($model->propriedades as $key => $value) {
-                if ($key == "LIMIT") {
-                    $later = " " . $key . " " . $value . " ";
-                } else {
-                    if ($value === true) {
-                        $condition .= " " . $key . " ";
-                    } elseif ($value === false) {
-                    } else {
-                        $condition .= " " . $key . " " . $value . " ";
-                    }
-                }
-            }
-            $condition .= $later;
-        }
-        return $condition;
-    }
-
-    private function buildConditionEqual($model)
-    {
-        $condition = "";
-        $i = 0;
-        foreach ($model as $key => $value) {
-            if ($key != "propriedades" && !empty($value)) {
-                if ($i != 0) {
-                    $condition .= " AND ";
-                } else {
-                    $condition .= " WHERE ";
-                }
-                $condition .= $key . " = '" . $value . "' ";
                 $i++;
             }
         }
