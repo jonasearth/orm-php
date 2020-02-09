@@ -76,7 +76,7 @@ O metodo create() retorna um conteudo em json com um status e um error :
             - utilizando uma classe neutra:
                 ```php
                 //é obrigatório o uso do (object)
-                $objeto = (object) [
+                $Objeto = (object) [
                     // é obrigatorio a passagem da variavel classname para identificação da tabela
                     "class_name" => "User",
                     // as outras variaveis servem para identificação das colunas
