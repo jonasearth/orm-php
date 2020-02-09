@@ -20,7 +20,6 @@ $mod = (object) [
 ];
 $a = new ORM();
 $b = $a->create($mod);
-echo $b;
-die();
+
 $GLOBALS["ORM"] = $a;
 ?>
