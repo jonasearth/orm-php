@@ -12,17 +12,18 @@ ORM feito para facilitar comunicação no banco de dados
 ## EXEMPLOS
 
   1. IMPORTAÇÃO E CONFIGURAÇÃO
-    ``` php
-    
-      require_once 'ORM.php';
-      $conn = (object) [
-          "host" => "localhost",
-          "user" => "usuario",
-          "password" => "senha",
-          "database" => "banco",
-      ];
-      $ORM = new ORM() ;
-      $ORM->create($conn);
-    
-    ```
+  
+  ``` php
+
+    require_once 'ORM.php';
+    $conn = (object) [
+        "host" => "localhost",
+        "user" => "usuario",
+        "password" => "senha",
+        "database" => "banco",
+    ];
+    $ORM = new ORM() ;
+    $ORM->create($conn);
+
+  ```
 
