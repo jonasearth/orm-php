@@ -18,7 +18,7 @@ ORM feito para facilitar comunicação no banco de dados
 //importação
 require_once 'ORM.php';
 //passagem de parametros de conexão
-$conn = (object) [
+$CONN = (object) [
     "host" => "localhost",
     "user" => "usuario",
     "password" => "senha",
@@ -27,7 +27,7 @@ $conn = (object) [
 //inicialização do objeto
 $ORM = new ORM();
 //passagem dos parâmetros para criação da conexão
-$ORM->create($conn);
+$ORM->create($CONN);
 ```
 
 O metodo create() retorna um conteudo em json com um status e um error :
@@ -76,7 +76,7 @@ O metodo create() retorna um conteudo em json com um status e um error :
             - utilizando uma classe neutra:
                 ```php
                 //é obrigatório o uso do (object)
-                $Objeto = (object) [
+                $OBJ = (object) [
                     // é obrigatorio a passagem da variavel classname para identificação da tabela
                     "class_name" => "User",
                     // as outras variaveis servem para identificação das colunas
