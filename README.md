@@ -27,7 +27,7 @@ ORM feito para facilitar comunicação no banco de dados
     //inicialização do objeto
     $ORM = new ORM() ;
     //passagem dos parâmetros para criação da conexão
-    $ORM->create($conn);
+    $ORM->create($conn); 
 
   ```
 
