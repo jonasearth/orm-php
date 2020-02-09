@@ -87,4 +87,6 @@ O metodo create() retorna um conteudo em json com um status e um error :
 
     1. SELEÇÂO
 
+    -
+
     Metodos de seleção se baseiam em obter algum dado do banco
