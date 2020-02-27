@@ -16,10 +16,9 @@ $mod = (object) [
     "host" => "localhost",
     "user" => "root",
     "password" => "",
-    "database" => "orm"
+    "database" => "cardapio"
 ];
 $a = new ORM();
-$b = $a->create($mod);
+$GLOBALS["ORM"] = $a->create($mod);
 
-$GLOBALS["ORM"] = $a;
 ?>

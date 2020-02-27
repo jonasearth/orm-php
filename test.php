@@ -1,6 +1,5 @@
 <?php
 require_once 'config.php';
-require_once 'User.php';
 
 $User = (object) [
     "class_name" => "User",

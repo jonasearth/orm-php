@@ -1,0 +1,72 @@
+{
+    "name": "phpbench/phpbench",
+    "description": "PHP Benchmarking Framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-pcre": "*",
+        "ext-reflection": "*",
+        "ext-spl": "*",
+        "beberlei/assert": "^2.4 || ^3.0",
+        "doctrine/annotations": "^1.2.7",
+        "lstrojny/functional-php": "1.0 || ^1.2.3",
+        "phpbench/container": "~1.2",
+        "phpbench/dom": "~0.2.0",
+        "seld/jsonlint": "^1.1",
+        "symfony/console": "^3.2 || ^4.0",
+        "symfony/debug": "^2.4 || ^3.0 || ^4.0",
+        "symfony/filesystem": "^2.4 || ^3.0 || ^4.0",
+        "symfony/finder": "^2.4 || ^3.0 || ^4.0",
+        "symfony/options-resolver": "^2.6 || ^3.0 || ^4.0",
+        "symfony/process": "^2.1 || ^3.0 || ^4.0",
+        "webmozart/path-util": "^2.3"
+    },
+    "require-dev": {
+        "doctrine/dbal": "^2.4",
+        "friendsofphp/php-cs-fixer": "^2.13.1",
+        "padraic/phar-updater": "^1.0",
+        "phpstan/phpstan": "^0.10.7",
+        "phpunit/phpunit": "^6.5 || ^7.0"
+    },
+    "suggest": {
+        "ext-curl": "For (web) reports extension",
+        "ext-xdebug": "For Xdebug profiling extension."
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpBench\\": "lib/",
+            "PhpBench\\Extensions\\Dbal\\": "extensions/dbal/lib/",
+            "PhpBench\\Extensions\\XDebug\\": "extensions/xdebug/lib/",
+            "PhpBench\\Extensions\\Reports\\": "extensions/reports/lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpBench\\Tests\\": "tests/",
+            "PhpBench\\Benchmarks\\": "benchmarks/",
+            "PhpBench\\Extensions\\XDebug\\Tests\\": "extensions/xdebug/tests/",
+            "PhpBench\\Extensions\\Dbal\\Tests\\": "extensions/dbal/tests/",
+            "PhpBench\\Extensions\\Dbal\\Benchmarks\\": "extensions/dbal/benchmarks/",
+            "PhpBench\\Extensions\\Reports\\Tests\\": "extensions/reports/tests/"
+        }
+    },
+    "bin": [
+        "bin/phpbench"
+    ]
+}

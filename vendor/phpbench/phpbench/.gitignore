@@ -1,0 +1,11 @@
+/composer.lock
+/vendor
+/docs/build
+/.phpbench.sqlite
+/phpunit.xml
+/.travis/phpbench-phar-private.pem
+/phpbench.json
+/.travis/build-key.pem
+/.travis/secrets.tar
+/.php_cs.cache
+/tests/Workspace
