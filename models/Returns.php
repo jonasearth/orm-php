@@ -11,10 +11,18 @@ class Returns
         self::jsonSend($data);
     }
 
-    private function jsonSend($data)
+    public static function msgData($msg, $data){
+
+        $dat = [
+            "mensagem" => $msg,
+            "error" => false,
+            "data" => $data,
+        ];
+        self::jsonSend($dat);
+    }
+    private static function jsonSend($data)
     {
-        echo json_encode($data);
-        die();
+        die(json_encode($data));
     }
 }
 ?>

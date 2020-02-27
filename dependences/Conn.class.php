@@ -25,7 +25,7 @@ class Conn
         } else {
             $this->conn = $conn;
             $this->error = false;
-
+            $GLOBALS['conn'] = $conn;
             return $conn;
         }
     }
@@ -90,6 +90,7 @@ class Conn
             return false;
         }
         if (mysqli_query($this->conn, $query)) {
+            
             return true;
         } else {
             $this->error = mysqli_error($this->conn);
@@ -110,7 +111,7 @@ class Conn
             $i++;
         }
         $query = " UPDATE `" . $tabela . "` SET " . $bld . " " . $condicao;
-
+        
         if (mysqli_query($this->conn, $query)) {
             if (mysqli_affected_rows($this->conn) == 0) {
                 $this->error =

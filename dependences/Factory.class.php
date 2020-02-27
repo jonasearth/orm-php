@@ -9,7 +9,6 @@ class Factory
 {
     function assocToStrWithQuots($array)
     {
-        $i = 0;
         $data = "";
         foreach ($array as $key => $value) {
             if ($value === null) {

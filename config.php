@@ -5,6 +5,8 @@
  * @version 1.0
  */
 
+date_default_timezone_set('America/Bahia');
+
 require_once 'ORM.php';
 error_reporting(E_ALL ^ E_NOTICE);
 
@@ -14,11 +16,11 @@ ini_set("display_errors", 1);
 
 $mod = (object) [
     "host" => "localhost",
-    "user" => "root",
-    "password" => "",
+    "user" => "jonas",
+    "password" => "amarsempre",
     "database" => "cardapio"
 ];
 $a = new ORM();
-$GLOBALS["ORM"] = $a->create($mod);
-
+$a->create($mod);
+$GLOBALS["ORM"] = $a;
 ?>

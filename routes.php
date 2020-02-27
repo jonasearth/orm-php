@@ -5,9 +5,21 @@ class Routes
     public static function init($r)
     {
         $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
-            $r->addRoute('GET', 's', '["Admin", "get_all_admins"]');
-            $r->addRoute('GET', '/{id:\d+}', '["Admin", "get_admin"]');
-            $r->addRoute('POST', '/add', '["Admin", "add_admin"]');
+            $r->addRoute('GET', 's', '["Admin", "getAll"]');
+            $r->addRoute('GET', '/{id:\d+}', '["Admin", "getById"]');
+
+            $r->addRoute('POST', '/registrar', '["Admin", "registrar"]');
+            $r->addRoute('POST', '/{id:\d+}/atualizar', '["Admin", "atualizar"]');
+
+            $r->addRoute('POST', '/login', '["Admin", "login"]');
+            $r->addRoute('GET', '/logout', '["Admin", "logout"]');
+            
+
+
+            $r->addRoute('DELETE', '/{id:\d+}/delete', '["Admin", "deletar"]');
+
+
+
         });
         // $r->addRoute('GET', '/admins', '["Admin", "get_all_admins"]');
         // $r->addRoute('GET', '/admin/{id:\d+}', '["Admin", "get_admin"]');
@@ -47,7 +59,7 @@ class Routes
     {
         $httpM = "_" . $GLOBALS['httpMethod'];
         $handler = json_decode($route[1]);
-
+        
         require_once './components/' . $handler[0] . '.php';
         $component = new $handler[0]();
         $fun = $handler[1];

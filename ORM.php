@@ -2,7 +2,7 @@
 
 /**
  * @author Jonas Lima
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 class ORM
@@ -84,7 +84,8 @@ class ORM
             if (!isset($res[0])) {
                 return $this->returnError("Nenhum resultado encontrado!");
             } else {
-                $res = $this->fetchResults($res, $class);
+                $idt['id'] = "*";
+                
 
                 return $this->returnSucess($res);
             }
@@ -105,7 +106,7 @@ class ORM
             return $this->returnError($condition->error);
         }
         $res = $this->conn->select("*", strtolower($class . "s"), $condition);
-
+       
         if (!$res && $this->conn->error != null) {
             $er = $this->conn->error;
             $this->conn->error = null;
@@ -114,6 +115,8 @@ class ORM
             if (!isset($res[0])) {
                 return $this->returnError("Nenhum resultado encontrado!");
             } else {
+                
+
                 $res = $this->fetchResults($res, $class);
 
                 return $this->returnSucess($res);
@@ -140,11 +143,15 @@ class ORM
             $data[0],
             $data[1]
         );
+        
+        
         if (!$res && $this->conn->error != null) {
             $er = $this->conn->error;
             $this->conn->error = null;
             return $this->returnError($er);
         } else {
+            $idt['id'] = mysqli_insert_id($this->conn->conn);
+            self::log(strtolower($class . "s"), $idt, 'Inseriu');
             return $this->returnSucess(
                 (object) [
                     "msg" => "Inserido com Sucesso"
@@ -179,6 +186,8 @@ class ORM
                     $this->conn->error = null;
                     array_push($return, $this->returnError($er));
                 } else {
+                    $idt['id'] = mysqli_insert_id($this->conn->conn);
+                    self::log(strtolower($class . "s"), $idt, 'Inseriu');
                     array_push(
                         $return,
                         $this->returnSucess(
@@ -214,7 +223,7 @@ class ORM
             $cond = "";
         }
         $res = $this->conn->update(
-            $class . "s",
+            strtolower($class . "s"),
             $data["col"],
             $data["val"],
             $cond
@@ -225,6 +234,9 @@ class ORM
             $this->conn->error = null;
             return $this->returnError($er);
         } else {
+            $idt['condicao'] = $cond;
+            self::log(strtolower($class . "s"), $idt, 'Atualizou');
+            
             return $this->returnSucess(
                 (object) [
                     "msg" => "Atualizado com Sucesso"
@@ -247,13 +259,16 @@ class ORM
 
         $condition = $this->buildConditionDelete($model);
 
-        $res = $this->conn->delete($class . "s", $condition);
+        $res = $this->conn->delete(strtolower($class . "s"), $condition);
 
         if (!$res && $this->conn->error != null) {
             $er = $this->conn->error;
             $this->conn->error = null;
             return $this->returnError($er);
         } else {
+            
+            $idt['condicao'] = $condition;
+            self::log(strtolower($class . "s"), $idt, 'Deletou');
             return $this->returnSucess(
                 (object) [
                     "msg" => "Deletado com Sucesso"
@@ -314,6 +329,29 @@ class ORM
         }
         return $class;
     }
+
+    private static function log($tabela, $idt, $acao){
+        
+        $today = date("d-m-Y H:i:s");  
+        $idt_linha = json_encode($idt);
+        $ses =json_encode($_SESSION);
+        $query = "INSERT INTO `logs` ( 
+            `tabela`, 
+            `idt_linha`, 
+            `acao`, 
+            `time`, 
+            `session_info`
+            ) VALUES (
+                '$tabela',
+                '$idt_linha',   
+                '$acao', 
+                '$today', 
+                '$ses'
+            )";
+
+            mysqli_query($GLOBALS['conn'], $query);
+    }
+
     /* FIM DAS FERRAMENTAS MUITO UTILIZADAS */
 
     /* INICIO DOS ESTRUTURADORES DE CONDIÇÃO */

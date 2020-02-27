@@ -1,5 +1,7 @@
 <?php
+session_start();
 require './vendor/autoload.php';
+require_once './config.php';
 require './routes.php';
 
 $dispatcher = FastRoute\simpleDispatcher(function (
