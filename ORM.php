@@ -2,7 +2,7 @@
 
 /**
  * @author Jonas Lima
- * @version 1.1.0
+ * @version 2.0.1
  */
 
 class ORM
@@ -25,7 +25,7 @@ class ORM
     /* INICIO METODOS */
 
     /* METODO CONSTRUTOR */
-    function __construct()
+    public function __construct()
     {
         $this->allRequires();
     }
@@ -45,22 +45,13 @@ class ORM
 
         if (!$conn || !$conn->conn) {
             $this->conn = $conn;
-            die(
-                json_encode(
-                    (object) [
-                        "status" => false,
-                        "error" => utf8_encode($conn->error)
-                    ]
-                )
-            );
+            Returns::simpleMsgError(utf8_encode($conn->error));
         } else {
             $this->conn = $conn;
-            return json_encode(
-                (object) [
-                    "status" => true,
-                    "error" => null
-                ]
-            );
+            return (object) [
+                "status" => true,
+                "error" => null
+            ];
         }
     }
     /* FIM DO METODO DE LIGAÇÃO */
@@ -74,7 +65,7 @@ class ORM
             return $this->returnError("Class Name not found!");
         }
 
-        $res = $this->conn->select("*", strtolower($class . "s"));
+        $res = $this->conn->select("*", strtolower($class));
 
         if (!$res && $this->conn->error != null) {
             $er = $this->conn->error;
@@ -85,7 +76,6 @@ class ORM
                 return $this->returnError("Nenhum resultado encontrado!");
             } else {
                 $idt['id'] = "*";
-                
 
                 return $this->returnSucess($res);
             }
@@ -105,8 +95,8 @@ class ORM
         if (isset($condition->error)) {
             return $this->returnError($condition->error);
         }
-        $res = $this->conn->select("*", strtolower($class . "s"), $condition);
-       
+        $res = $this->conn->select("*", strtolower($class), $condition);
+
         if (!$res && $this->conn->error != null) {
             $er = $this->conn->error;
             $this->conn->error = null;
@@ -115,9 +105,7 @@ class ORM
             if (!isset($res[0])) {
                 return $this->returnError("Nenhum resultado encontrado!");
             } else {
-                
-
-                $res = $this->fetchResults($res, $class);
+               
 
                 return $this->returnSucess($res);
             }
@@ -128,7 +116,7 @@ class ORM
 
     /* INICIO DOS METODOS DE INSERÇÃO */
 
-    function insertOne($model)
+    public function insertOne($model)
     {
         $class = $this->getClassName($model);
 
@@ -139,19 +127,18 @@ class ORM
         $data = $this->buildInsertArray($model);
 
         $res = $this->conn->insert(
-            strtolower($class . "s"),
+            strtolower($class),
             $data[0],
             $data[1]
         );
-        
-        
+
         if (!$res && $this->conn->error != null) {
             $er = $this->conn->error;
             $this->conn->error = null;
             return $this->returnError($er);
         } else {
             $idt['id'] = mysqli_insert_id($this->conn->conn);
-            self::log(strtolower($class . "s"), $idt, 'Inseriu');
+            self::log(strtolower($class), [$idt, $data], 'Inseriu');
             return $this->returnSucess(
                 (object) [
                     "msg" => "Inserido com Sucesso"
@@ -160,7 +147,7 @@ class ORM
         }
     }
 
-    function insertN($arrayModels)
+    public function insertN($arrayModels)
     {
         $i = 0;
         $return = array();
@@ -177,7 +164,7 @@ class ORM
                 $data = $this->buildInsertArray($model);
 
                 $res = $this->conn->insert(
-                    strtolower($class . "s"),
+                    strtolower($class),
                     $data[0],
                     $data[1]
                 );
@@ -187,7 +174,7 @@ class ORM
                     array_push($return, $this->returnError($er));
                 } else {
                     $idt['id'] = mysqli_insert_id($this->conn->conn);
-                    self::log(strtolower($class . "s"), $idt, 'Inseriu');
+                    self::log(strtolower($class), [$idt, $data], 'Inseriu');
                     array_push(
                         $return,
                         $this->returnSucess(
@@ -208,7 +195,7 @@ class ORM
 
     /* INICIO DOS METODOS DE ATUALIZAÇÃO */
 
-    function updateOne($model)
+    public function updateOne($model)
     {
         $class = $this->getClassName($model);
 
@@ -223,7 +210,7 @@ class ORM
             $cond = "";
         }
         $res = $this->conn->update(
-            strtolower($class . "s"),
+            strtolower($class),
             $data["col"],
             $data["val"],
             $cond
@@ -235,8 +222,8 @@ class ORM
             return $this->returnError($er);
         } else {
             $idt['condicao'] = $cond;
-            self::log(strtolower($class . "s"), $idt, 'Atualizou');
-            
+            self::log(strtolower($class), $idt, 'Atualizou');
+
             return $this->returnSucess(
                 (object) [
                     "msg" => "Atualizado com Sucesso"
@@ -249,7 +236,7 @@ class ORM
 
     /* INICIO DOS METODOS DE DELEÇÃO */
 
-    function deleteOne($model)
+    public function deleteOne($model)
     {
         $class = $this->getClassName($model);
 
@@ -259,16 +246,15 @@ class ORM
 
         $condition = $this->buildConditionDelete($model);
 
-        $res = $this->conn->delete(strtolower($class . "s"), $condition);
+        $res = $this->conn->delete(strtolower($class), $condition);
 
         if (!$res && $this->conn->error != null) {
             $er = $this->conn->error;
             $this->conn->error = null;
             return $this->returnError($er);
         } else {
-            
             $idt['condicao'] = $condition;
-            self::log(strtolower($class . "s"), $idt, 'Deletou');
+            self::log(strtolower($class), $idt, 'Deletou');
             return $this->returnSucess(
                 (object) [
                     "msg" => "Deletado com Sucesso"
@@ -286,35 +272,22 @@ class ORM
     /* INICIO DAS FERRAMENTAS MUITO UTILIZADAS */
     private function returnError($error)
     {
-        return json_encode(
-            (object) [
-                "status" => false,
-                "error" => $error,
-                "data" => []
-            ]
-        );
+        return (object) [
+            "status" => false,
+            "error" => $error
+        ];
     }
 
     private function returnSucess($data)
     {
-        return json_encode(
-            (object) [
-                "status" => true,
-                "error" => null,
-                "data" => $data
-            ]
-        );
+        return (object) [
+            "status" => true,
+            "error" => null,
+            "data" => $data
+        ];
     }
 
-    private function fetchResults($res, $class)
-    {
-        $i = 0;
-        while (isset($res[$i])) {
-            $res[$i] = new $class($res[$i]);
-            $i++;
-        }
-        return $res;
-    }
+   
 
     private function getClassName($model)
     {
@@ -330,26 +303,34 @@ class ORM
         return $class;
     }
 
-    private static function log($tabela, $idt, $acao){
-        
-        $today = date("d-m-Y H:i:s");  
-        $idt_linha = json_encode($idt);
-        $ses =json_encode($_SESSION);
-        $query = "INSERT INTO `logs` ( 
-            `tabela`, 
-            `idt_linha`, 
-            `acao`, 
-            `time`, 
-            `session_info`
-            ) VALUES (
-                '$tabela',
-                '$idt_linha',   
-                '$acao', 
-                '$today', 
-                '$ses'
-            )";
+    private static function log($tabela, $idt, $acao)
+    {
+        if ($tabela != 'notifications') {
+            # code...
+
+            $today = date("d-m-Y H:i:s");
+            $idt_linha = json_encode($idt);
+            $ses = json_encode($_SESSION);
+            $idt_linha = mysqli_real_escape_string(
+                $GLOBALS['conn'],
+                trim($idt_linha)
+            );
+            $query = "INSERT INTO `logs` ( 
+                `tabela`, 
+                `idt_linha`, 
+                `acao`, 
+                `time`, 
+                `session_info`
+                ) VALUES (
+                    '$tabela',
+                    '$idt_linha',   
+                    '$acao', 
+                    '$today', 
+                    '$ses'
+                )";
 
             mysqli_query($GLOBALS['conn'], $query);
+        }
     }
 
     /* FIM DAS FERRAMENTAS MUITO UTILIZADAS */
@@ -512,7 +493,7 @@ class ORM
     /* METODO DE LOAD DAS DEPENDENCIAS */
     private function allRequires()
     {
-        require_once './dependences/Conn.class.php';
+        require_once __DIR__ . '/dependences/Conn.class.php';
     }
     /* FIM METODO DE LOAD DAS DEPENDENCIAS */
 
