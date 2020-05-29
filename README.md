@@ -239,7 +239,7 @@ O metodo create() retorna um conteudo em json com um status e um error :
                         "senha" => "senhateste"
                     ];
 
-                    $retorno = $ORM->getAll($User);
+                    $retorno = $ORM->insertOne($User);
 
                     ```
 
