@@ -111,7 +111,7 @@ O metodo create() retorna um conteudo em json com um status e um error :
                     {
                         "id": "2",
                         "nome": "david",
-                        "senha": "viado"
+                        "senha": "tavares"
                     },
                     {
                         "id": "5",
@@ -191,7 +191,7 @@ O metodo create() retorna um conteudo em json com um status e um error :
                     {
                     "id": "2",
                     "nome": "david",
-                    "senha": "viado"
+                    "senha": "tavares"
                     },
                     {
                     "id": "6",
